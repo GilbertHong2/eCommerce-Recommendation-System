@@ -28,15 +28,15 @@ print(order_products_train.shape)
 print(orders.shape)
 print(products.shape)
 
-aisles.head() # 不重要
+aisles.head()
 # aisle_id: aisle identifier
 # aisle: the name of the aisle
 
-departments.head() # 不重要
+departments.head()
 # department_id: department identifier
 # department: the name of the department
 
-orders.head() # Dimensional Table 描述关系信息
+orders.head() # Dimensional Table
 # order_id: order identifier
 # user_id: customer identifier
 # eval_set: which evaluation set this order belongs in (see SET described below)
