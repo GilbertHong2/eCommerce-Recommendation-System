@@ -132,7 +132,7 @@ print("NaN count in days_since_prior_order column: ", orders[orders.days_since_p
 print("order_number 1 count in orders table: ", orders[orders.order_number == 1].drop_duplicates().shape[0])
 print("user_id count in orders table: ", orders.user_id.drop_duplicates().shape[0])
 
-2.2.Validate Valid orders matching in the prior table
+# 2.2.Validate Valid orders matching in the prior table
 
 orders.groupby(['eval_set'], as_index=False).agg(OrderedDict([('order_id','nunique')]))
 print("order_id count in prior: ", order_products_prior['order_id'].nunique())
