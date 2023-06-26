@@ -45,14 +45,13 @@ orders.head() # Dimensional Table
 # order_hour_of_day: the hour of the day the order was placed on
 # days_since_prior: days since the last order, capped at 30 (with NANs for order_number = 1)
 
-products.head() # Dimensional Table 描述关系信息
+products.head() # Dimensional Table
 # product_id: product identifier
 # product_name: name of the product
 # aisle_id: foreign key
 # department_id: foreign key
 
 order_products_prior.head()  # Factor Table
-# reordered ?????? -> 要我何用？？？
 # reordered: 1 if this product has been ordered by this user in the past, 0 otherwise
 
 # "prior": orders prior to that users most recent order
@@ -127,7 +126,6 @@ plt.show()
 
 orders.head()
 # days since the last order (with NAs for order_number = 1)
-# 模型不支持Nan数据，需要补齐。
 
 print("Size of the order dataset: ", orders.shape[0])
 print("NaN count in days_since_prior_order column: ", orders[orders.days_since_prior_order.isnull()].shape[0])
@@ -170,7 +168,6 @@ print("intersection of prior and train: ", len(prior_user_ids.intersection(train
 
 """2.6. Validate order counts in the train dataset"""
 
-# 是否每一个人在train dataset里只有一个order？
 (orders[orders.user_id.isin(train_user_ids)][orders.eval_set == 'train']
   .groupby(['user_id'], as_index=False)
   .agg(OrderedDict([('order_number','count')]))
@@ -194,9 +191,3 @@ df_train_order_min = (orders[orders.user_id.isin(train_user_ids)][orders.eval_se
 df_order_diff = pd.merge(df_prior_order_max, df_train_order_min, on = ['user_id'])
 print("Rows count where prior_order_max >= train_order_min: ",
       df_order_diff[df_order_diff.prior_order_max >= df_order_diff.train_order_min].shape[0])
-
-"""由此可见，prior data里面都是历史数据，即 prior data里面的order_num比train data里面对应user的order_num都小"""
-
-
-
-"""休息5mins"""
