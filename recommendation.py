@@ -59,10 +59,8 @@ order_products_prior.head()  # Factor Table
 order_products_train.head() # Factor Table
 # "train": training data supplied to participants
 
-"""# 2. Data Exploration
-
-2.1 Build order history table `prior_order_details`
-"""
+# 2. Data Exploration
+# 2.1 Build order history table `prior_order_details`
 
 # Build prior order details table for data exploration
 prior_order_details = order_products_prior.merge(orders, on="order_id")
@@ -79,7 +77,7 @@ prior_order_details["order_dow"] = prior_order_details["order_dow"].apply(lambda
 
 prior_order_details.head()
 
-"""2.2 Visualize order frequency on DoW"""
+# 2.2 Visualize order frequency on DoW
 
 #Frequency of Order Based on Days
 ax = sns.countplot(x="order_dow",data=prior_order_details)
@@ -96,7 +94,7 @@ plt.xlabel("")
 plt.ylabel("Number of Order")
 plt.show()
 
-"""1.3 Visualize order frequency on HoD"""
+# 2.3 Visualize order frequency on HoD
 
 order_hours_counts = orders.groupby("order_id")["order_hour_of_day"].mean().reset_index()
 order_hod_stats = order_hours_counts.order_hour_of_day.value_counts()
