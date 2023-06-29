@@ -1,8 +1,7 @@
 # The data used in this project is from https://gist.github.com/jeremystan/c3b39d947d9b88b3ccff3147dbcf6c6b
 # or a kaggle competition at https://www.kaggle.com/competitions/instacart-market-basket-analysis/data?select=aisles.csv.zip
 
-# 1. Load the Data
-
+# 1. Load Data
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
