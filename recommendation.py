@@ -10,9 +10,7 @@ from collections import OrderedDict
 
 # from google.colab import drive
 # drive.mount('/content/drive')
-
-# cd /content/drive/MyDrive/Laioffer/csv_files/RecSys_eComm/
-# ls
+# cd /content/drive/MyDrive/xxxxxxxx # change xxxxx here with your directory
 
 aisles = pd.read_csv('aisles.csv')
 departments = pd.read_csv('departments.csv')
