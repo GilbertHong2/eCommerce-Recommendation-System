@@ -12,19 +12,21 @@ from collections import OrderedDict
 # drive.mount('/content/drive')
 # cd /content/drive/MyDrive/xxxxxxxx # change xxxxx here with your directory
 
+# dimension tables
 aisles = pd.read_csv('aisles.csv')
 departments = pd.read_csv('departments.csv')
-order_products_prior = pd.read_csv('order_products_prior.csv') # ?
-order_products_train = pd.read_csv('order_products_train.csv') # ?
 orders = pd.read_csv('orders.csv')
 products = pd.read_csv('products.csv')
+# fact tables
+order_products_prior = pd.read_csv('order_products_prior.csv')
+order_products_train = pd.read_csv('order_products_train.csv')
 
-print(aisles.shape)
-print(departments.shape)
-print(order_products_prior.shape)
-print(order_products_train.shape)
-print(orders.shape)
-print(products.shape)
+# print(aisles.shape)
+# print(departments.shape)
+# print(order_products_prior.shape)
+# print(order_products_train.shape)
+# print(orders.shape)
+# print(products.shape)
 
 aisles.head()
 # aisle_id: aisle identifier
@@ -34,7 +36,7 @@ departments.head()
 # department_id: department identifier
 # department: the name of the department
 
-orders.head() # Dimensional Table
+orders.head()
 # order_id: order identifier
 # user_id: customer identifier
 # eval_set: which evaluation set this order belongs in (see SET described below)
@@ -43,18 +45,17 @@ orders.head() # Dimensional Table
 # order_hour_of_day: the hour of the day the order was placed on
 # days_since_prior: days since the last order, capped at 30 (with NANs for order_number = 1)
 
-products.head() # Dimensional Table
+products.head()
 # product_id: product identifier
 # product_name: name of the product
 # aisle_id: foreign key
 # department_id: foreign key
 
-order_products_prior.head()  # Factor Table
+order_products_prior.head()
 # reordered: 1 if this product has been ordered by this user in the past, 0 otherwise
-
 # "prior": orders prior to that users most recent order
 
-order_products_train.head() # Factor Table
+order_products_train.head()
 # "train": training data supplied to participants
 
 # 2. Data Exploration
@@ -64,7 +65,7 @@ order_products_train.head() # Factor Table
 prior_order_details = order_products_prior.merge(orders, on="order_id")
 prior_order_details.head()
 
-# Covert dow to string for better visualization
+# Covert dow to string
 prior_order_details["order_dow"] = prior_order_details["order_dow"].apply(lambda x:"Sunday" if x==0 else x)
 prior_order_details["order_dow"] = prior_order_details["order_dow"].apply(lambda x:"Monday" if x==1 else x)
 prior_order_details["order_dow"] = prior_order_details["order_dow"].apply(lambda x:"Tuesday" if x==2 else x)
