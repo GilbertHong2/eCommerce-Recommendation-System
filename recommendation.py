@@ -59,7 +59,6 @@ order_products_train.head()
 # "train": training data supplied to participants
 
 # 2. Data Exploration
-# 2.1 Build order history table `prior_order_details`
 
 # Build prior order details table for data exploration
 prior_order_details = order_products_prior.merge(orders, on="order_id")
@@ -73,10 +72,7 @@ prior_order_details["order_dow"] = prior_order_details["order_dow"].apply(lambda
 prior_order_details["order_dow"] = prior_order_details["order_dow"].apply(lambda x:"Thursday" if x==4 else x)
 prior_order_details["order_dow"] = prior_order_details["order_dow"].apply(lambda x:"Friday" if x==5 else x)
 prior_order_details["order_dow"] = prior_order_details["order_dow"].apply(lambda x:"Saturday" if x==6 else x)
-
 # prior_order_details.head()
-
-# 2.2 Visualize order frequency on DoW
 
 # Frequency of Order Based on Days
 ax = sns.countplot(x="order_dow",data=prior_order_details,
@@ -86,18 +82,20 @@ plt.xlabel("")
 plt.ylabel("Number of Order")
 plt.show()
 
-# 2.3 Visualize order frequency on HoD
-
+# Visualize order frequency on HoD
 order_hours_counts = orders.groupby("order_id")["order_hour_of_day"].mean().reset_index()
 order_hod_stats = order_hours_counts.order_hour_of_day.value_counts()
-sns.barplot(order_hod_stats.index, order_hod_stats.values)
+
+order_hod_stats = order_hod_stats.reset_index()
+order_hod_stats.columns = ['Order Time (hours)', 'Number of Order']
+
+sns.barplot(x='Order Time (hours)', y='Number of Order', data=order_hod_stats)
 plt.title("Order Hour")
 plt.ylabel("Number of Order")
 plt.xlabel('Order Time (hours)')
 plt.show()
 
-"""1.4 Reorder Pattern Analysis"""
-
+# Reorder Pattern
 reorder_heatmap = prior_order_details.groupby(["order_dow", "order_hour_of_day"])["reordered"].mean().reset_index()
 reorder_heatmap = reorder_heatmap.pivot('order_dow', 'order_hour_of_day', 'reordered')
 plt.figure(figsize=(12,6))
