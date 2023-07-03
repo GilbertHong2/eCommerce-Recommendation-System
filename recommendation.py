@@ -78,14 +78,7 @@ prior_order_details["order_dow"] = prior_order_details["order_dow"].apply(lambda
 
 # 2.2 Visualize order frequency on DoW
 
-#Frequency of Order Based on Days
-ax = sns.countplot(x="order_dow",data=prior_order_details)
-plt.title("Order Frequency (Days)")
-plt.xlabel("")
-plt.ylabel("Number of Order")
-plt.show()
-
-#Frequency of Order Based on Days
+# Frequency of Order Based on Days
 ax = sns.countplot(x="order_dow",data=prior_order_details,
                    order=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"])
 plt.title("Order Frequency (Days)")
