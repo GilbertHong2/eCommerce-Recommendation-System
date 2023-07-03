@@ -111,7 +111,6 @@ plt.show()
 
 # 2.1. Validate the `days_since_prior_order` column in orders table
 
-
 orders.head()
 # days since the last order (with NAs for order_number = 1)
 
