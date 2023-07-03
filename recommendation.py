@@ -63,7 +63,7 @@ order_products_train.head()
 
 # Build prior order details table for data exploration
 prior_order_details = order_products_prior.merge(orders, on="order_id")
-prior_order_details.head()
+# prior_order_details.head()
 
 # Covert dow to string
 prior_order_details["order_dow"] = prior_order_details["order_dow"].apply(lambda x:"Sunday" if x==0 else x)
@@ -74,7 +74,7 @@ prior_order_details["order_dow"] = prior_order_details["order_dow"].apply(lambda
 prior_order_details["order_dow"] = prior_order_details["order_dow"].apply(lambda x:"Friday" if x==5 else x)
 prior_order_details["order_dow"] = prior_order_details["order_dow"].apply(lambda x:"Saturday" if x==6 else x)
 
-prior_order_details.head()
+# prior_order_details.head()
 
 # 2.2 Visualize order frequency on DoW
 
