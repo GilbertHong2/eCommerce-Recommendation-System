@@ -119,7 +119,7 @@ prior_order_all[["aisle_id"]].merge(aisles, on="aisle_id")['aisle'].value_counts
 prior_order_all[["department_id"]].merge(departments, on="department_id")['department'].value_counts().head(10)
 
 
-# 2. Data Quality Check
+# 3. Data Quality Check
 
 # Validate the `days_since_prior_order` column in orders table
 print("Size of the order dataset: ", orders.shape[0])
