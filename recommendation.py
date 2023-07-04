@@ -106,6 +106,18 @@ plt.xlabel("Hours")
 plt.show()
 
 # the most popular products, aisles and departments
+prior_order_all = order_products_prior.merge(products, on="product_id")
+prior_order_all.head()
+
+# top 10 products
+prior_order_all['product_name'].value_counts().head(10)
+
+# top 10 aisles
+prior_order_all[["aisle_id"]].merge(aisles, on="aisle_id")['aisle'].value_counts().head(10)
+
+# top 10 departments
+prior_order_all[["department_id"]].merge(departments, on="department_id")['department'].value_counts().head(10)
+
 
 # 2. Data Quality Check
 
