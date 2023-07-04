@@ -121,34 +121,27 @@ prior_order_all[["department_id"]].merge(departments, on="department_id")['depar
 
 # 2. Data Quality Check
 
-# 2.1. Validate the `days_since_prior_order` column in orders table
-
-orders.head()
-# days since the last order (with NAs for order_number = 1)
-
+# Validate the `days_since_prior_order` column in orders table
 print("Size of the order dataset: ", orders.shape[0])
 print("NaN count in days_since_prior_order column: ", orders[orders.days_since_prior_order.isnull()].shape[0])
 print("order_number 1 count in orders table: ", orders[orders.order_number == 1].drop_duplicates().shape[0])
 print("user_id count in orders table: ", orders.user_id.drop_duplicates().shape[0])
+# number of orders with no prior matches the days since
 
-# 2.2.Validate Valid orders matching in the prior table
+# Validate all prior orders match in the prior table
 
 orders.groupby(['eval_set'], as_index=False).agg(OrderedDict([('order_id','nunique')]))
 print("order_id count in prior: ", order_products_prior['order_id'].nunique())
 print("order_id from prior found in orders: ", order_products_prior[order_products_prior.order_id.isin(orders.order_id)].order_id.nunique())
 
-"""2.3. Validate orders matching in the train table"""
+# Validate all train orders match in the train table
 print("orders count in train: ", order_products_train['order_id'].nunique())
 print("order_id from train found in orders: ", order_products_train[order_products_train.order_id.isin(orders.order_id)].order_id.nunique())
 
-"""2.4. Validate the intersection between prior and train table"""
-
-# train and prior are different 
+# check intersection between prior and train
 print("order_id intersection between prior and train: ", pd.merge(order_products_prior, order_products_train, on = ['order_id']).shape[0])
 
-"""2.5. Validate the user_id matching in prior and train set"""
-
-# number of users in each eval set
+# users in contained both datasets
 orders.groupby(['eval_set'], as_index=False).agg(OrderedDict([('user_id','nunique')]))
 
 prior_user_ids = set(orders[orders['eval_set'] == 'prior']['user_id'])
@@ -157,16 +150,13 @@ print("user_ids in prior: ", len(prior_user_ids))
 print("user_ids in train: ", len(train_user_ids))
 print("intersection of prior and train: ", len(prior_user_ids.intersection(train_user_ids)))
 
-# 2.6. Validate order counts in the train dataset
-
+# order counts from each user in the train dataset
 (orders[orders.user_id.isin(train_user_ids)][orders.eval_set == 'train']
   .groupby(['user_id'], as_index=False)
   .agg(OrderedDict([('order_number','count')]))
   .rename(columns={'order_number':'order_counts'})).sort_values(by=['order_counts']).head()
 
-# 2.7. Validate the relative order of `order_num` in prior and train dataset
-
-
+# Validate the relative order of `order_num` in prior and train dataset
 df_prior_order_max = (orders[orders.user_id.isin(prior_user_ids)][orders.eval_set == 'prior']
   .groupby(['user_id'], as_index=False)
   .agg(OrderedDict([('order_number','max')]))
@@ -177,6 +167,7 @@ df_train_order_min = (orders[orders.user_id.isin(train_user_ids)][orders.eval_se
   .agg(OrderedDict([('order_number','min')]))
   .rename(columns={'order_number':'train_order_min'}))
 
+# make sure all prior orders came before the training orders
 df_order_diff = pd.merge(df_prior_order_max, df_train_order_min, on = ['user_id'])
 print("Rows count where prior_order_max >= train_order_min: ",
       df_order_diff[df_order_diff.prior_order_max >= df_order_diff.train_order_min].shape[0])
