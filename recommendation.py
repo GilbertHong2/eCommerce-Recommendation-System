@@ -171,3 +171,6 @@ df_train_order_min = (orders[orders.user_id.isin(train_user_ids)][orders.eval_se
 df_order_diff = pd.merge(df_prior_order_max, df_train_order_min, on = ['user_id'])
 print("Rows count where prior_order_max >= train_order_min: ",
       df_order_diff[df_order_diff.prior_order_max >= df_order_diff.train_order_min].shape[0])
+
+# 4 Construct Model Label
+
