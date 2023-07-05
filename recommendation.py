@@ -174,6 +174,13 @@ print("Rows count where prior_order_max >= train_order_min: ",
 
 # 4 Construct Model Label
 
+# We want customer who has reordered in the past (in the prior set), and reordered recently (in the training set), 
+# to ensure the interest of purchasing the item, and use it as the label when evaluate the model.
+# 
+# When constructing the model, only the features from the prior set will be used to 
+# train the model avoid data leakage that would give inaccurate data performance.
+#
+
 # （1）
 train_details = order_products_train.merge(orders, on = 'order_id')
 train_unique_key = train_details['user_id'].astype('str') + '_' + train_details['product_id'].astype('str')
