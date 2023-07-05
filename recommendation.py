@@ -274,3 +274,10 @@ model_all_data = model_all_data.merge(df_user_features, on = ['user_id'])
 model_all_data['label'].value_counts() # enough of reordered items
 
 model_all_data.head()
+
+# Save the model_all_data dataframe as csv file to the file path we selected above.
+model_all_data.to_csv('model_all_data.csv', index=False)
+
+
+
+
