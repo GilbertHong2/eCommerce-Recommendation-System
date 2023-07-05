@@ -208,7 +208,6 @@ user_product_features = ['user_product__total_orders',
                          'user_product__most_dow',
                          'user_product__most_hod']
 
-# possible combined features
 df_user_product_features = (prior_details.groupby(['product_id','user_id'],as_index=False)
                                            .agg(OrderedDict(
                                                    [('order_id','count'), 
@@ -231,7 +230,6 @@ product_features = ['product__total_orders',
                      'product__days_since_prior_order_mean'
                      ]
 
-# possible combined features
 df_product_features = (prior_details.groupby(['product_id'],as_index=False)
                                            .agg(OrderedDict(
                                                    [('order_id','nunique'), 
@@ -258,7 +256,6 @@ user_features = ['user__order_count',
                   'user__most_hod',
                   ]
 
-# combined features
 df_user_features = (prior_details.groupby(['user_id'],as_index=False)
                                            .agg(OrderedDict(
                                                    [('order_id','nunique'), 
