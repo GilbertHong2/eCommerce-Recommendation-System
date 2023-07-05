@@ -21,6 +21,8 @@ products = pd.read_csv('products.csv')
 order_products_prior = pd.read_csv('order_products_prior.csv')
 order_products_train = pd.read_csv('order_products_train.csv')
 
+orders = orders[orders['user_id'] < 50000] # desize the dataset so the computation is easier
+
 # print(aisles.shape)
 # print(departments.shape)
 # print(order_products_prior.shape)
@@ -202,44 +204,51 @@ model_all_data.head()
 # 5. Construct Model Features
 
 # Feature Group 1: user-product activity features
+# the columns commented out are computationally intensive
 user_product_features = ['user_product__total_orders',
                          'user_product__add_to_cart_order_mean',
-                         'user_product__reordered_mean',
-                         'user_product__most_dow',
-                         'user_product__most_hod']
+                         'user_product__reordered_mean']
+  
+                        #  'user_product__most_dow',
+                        #  'user_product__most_hod'
 
 df_user_product_features = (prior_details.groupby(['product_id','user_id'],as_index=False)
                                            .agg(OrderedDict(
-                                                   [('order_id','count'), 
-                                                    ('add_to_cart_order','mean'), 
-                                                    ('reordered', 'mean'), 
-                                                    ('order_dow', (lambda x: x.mode()[0])),
-                                                    ('order_hour_of_day', (lambda x: x.mode()[0])), 
+                                                   [('order_id','count'),
+                                                    ('add_to_cart_order','mean'),
+                                                    ('reordered', 'mean')
                                                     ])))
+
+#                                                     ('order_dow', (lambda x: x.mode()[0])),
+#                                                     ('order_hour_of_day', (lambda x: x.mode()[0]))
+
 df_user_product_features.columns = ['product_id', 'user_id'] + user_product_features
 
 model_all_data = model_all_data.merge(df_user_product_features, on = ['user_id', 'product_id'])
 
 # Feature Group 2: product features, not from the user
+# the columns commented out are computationally intensive
 product_features = ['product__total_orders',
                      'product__add_to_cart_order_mean',
                      'product__total_users',
                      'product__reordered_mean',
-                     'product__most_dow',
-                     'product__most_hod',
                      'product__days_since_prior_order_mean'
                      ]
+                    #  'product__most_dow',
+                    #  'product__most_hod',
 
 df_product_features = (prior_details.groupby(['product_id'],as_index=False)
                                            .agg(OrderedDict(
-                                                   [('order_id','nunique'), 
-                                                    ('add_to_cart_order','mean'), 
-                                                    ('user_id', 'nunique'), 
-                                                    ('reordered', 'mean'), 
-                                                    ('order_dow', (lambda x: x.mode()[0])), 
-                                                    ('order_hour_of_day', (lambda x: x.mode()[0])), 
-                                                    ('days_since_prior_order', 'mean') 
+                                                   [('order_id','nunique'),
+                                                    ('add_to_cart_order','mean'),
+                                                    ('user_id', 'nunique'),
+                                                    ('reordered', 'mean'),
+                                                    ('days_since_prior_order', 'mean')
                                                     ])))
+
+                                                    # ('order_dow', (lambda x: x.mode()[0])),
+                                                    # ('order_hour_of_day', (lambda x: x.mode()[0])),
+
 df_product_features.columns = ['product_id'] + product_features
 
 model_all_data = model_all_data.merge(df_product_features, on = ['product_id'])
