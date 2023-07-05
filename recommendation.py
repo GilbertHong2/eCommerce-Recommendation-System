@@ -174,3 +174,12 @@ print("Rows count where prior_order_max >= train_order_min: ",
 
 # 4 Construct Model Label
 
+# （1）
+train_details = order_products_train.merge(orders, on = 'order_id')
+train_unique_key = train_details['user_id'].astype('str') + '_' + train_details['product_id'].astype('str')
+
+train_unique_key.head()
+
+# (2)
+train_user_ids = set(orders[orders['eval_set'] == 'train']['user_id'])
+prior_details = order_products_prior.merge(orders, on = 'order_id')
