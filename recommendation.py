@@ -174,19 +174,29 @@ print("Rows count where prior_order_max >= train_order_min: ",
 
 # 4 Construct Model Label
 
-# We want customer who has reordered in the past (in the prior set), and reordered recently (in the training set), 
+# We want user who has reordered in the past (in the prior set), and reordered recently (in the training set), 
 # to ensure the interest of purchasing the item, and use it as the label when evaluate the model.
 # 
 # When constructing the model, only the features from the prior set will be used to 
 # train the model avoid data leakage that would give inaccurate data performance.
 #
 
-# （1）
+#  all train data orders, set each order on a product from a user as the "unique key"
 train_details = order_products_train.merge(orders, on = 'order_id')
 train_unique_key = train_details['user_id'].astype('str') + '_' + train_details['product_id'].astype('str')
-
-train_unique_key.head()
-
-# (2)
 train_user_ids = set(orders[orders['eval_set'] == 'train']['user_id'])
 prior_details = order_products_prior.merge(orders, on = 'order_id')
+
+# do the same thing with prior data.
+model_all_data = prior_details[prior_details.user_id.isin(train_user_ids)][['user_id','product_id','order_number', 'order_dow', 'order_hour_of_day', 'days_since_prior_order']]
+model_all_data = model_all_data.drop_duplicates(subset=['user_id', 'product_id'])
+model_all_data['unique_key'] = model_all_data['user_id'].astype('str') + '_' + model_all_data['product_id'].astype('str')
+
+model_all_data['label'] = 0
+
+# set the label if the user bought in both train and prior using unique key
+model_all_data.loc[model_all_data.unique_key.isin(train_unique_key), 'label'] = 1
+
+model_all_data.head()
+
+
