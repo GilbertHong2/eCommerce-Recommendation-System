@@ -231,5 +231,18 @@ product_features = ['product__total_orders',
                      'product__days_since_prior_order_mean'
                      ]
 
+# possible combined features
+df_product_features = (prior_details.groupby(['product_id'],as_index=False)
+                                           .agg(OrderedDict(
+                                                   [('order_id','nunique'), 
+                                                    ('add_to_cart_order','mean'), 
+                                                    ('user_id', 'nunique'), 
+                                                    ('reordered', 'mean'), 
+                                                    ('order_dow', (lambda x: x.mode()[0])), 
+                                                    ('order_hour_of_day', (lambda x: x.mode()[0])), 
+                                                    ('days_since_prior_order', 'mean') 
+                                                    ])))
+df_product_features.columns = ['product_id'] + product_features
+
 
 
