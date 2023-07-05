@@ -199,4 +199,37 @@ model_all_data.loc[model_all_data.unique_key.isin(train_unique_key), 'label'] = 
 
 model_all_data.head()
 
+# 5. Construct Model Features
+
+# Feature Group 1: user-product activity features
+user_product_features = ['user_product__total_orders',
+                         'user_product__add_to_cart_order_mean',
+                         'user_product__reordered_mean',
+                         'user_product__most_dow',
+                         'user_product__most_hod']
+
+# possible combined features
+df_user_product_features = (prior_details.groupby(['product_id','user_id'],as_index=False)
+                                           .agg(OrderedDict(
+                                                   [('order_id','count'), 
+                                                    ('add_to_cart_order','mean'), 
+                                                    ('reordered', 'mean'), 
+                                                    ('order_dow', (lambda x: x.mode()[0])),
+                                                    ('order_hour_of_day', (lambda x: x.mode()[0])), 
+                                                    ])))
+df_user_product_features.columns = ['product_id', 'user_id'] + user_product_features
+
+model_all_data = model_all_data.merge(df_user_product_features, on = ['user_id', 'product_id'])
+
+# Feature Group 2: product features, not from the user
+product_features = ['product__total_orders',
+                     'product__add_to_cart_order_mean',
+                     'product__total_users',
+                     'product__reordered_mean',
+                     'product__most_dow',
+                     'product__most_hod',
+                     'product__days_since_prior_order_mean'
+                     ]
+
+
 
