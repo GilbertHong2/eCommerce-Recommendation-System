@@ -244,5 +244,33 @@ df_product_features = (prior_details.groupby(['product_id'],as_index=False)
                                                     ])))
 df_product_features.columns = ['product_id'] + product_features
 
+model_all_data = model_all_data.merge(df_product_features, on = ['product_id'])
+model_all_data = model_all_data.merge(products[['product_id','aisle_id', 'department_id']],
+                                      on = ['product_id'])
+model_all_data.rename(columns={'aisle_id': 'product__aisle_id', 'department_id': 'product__department_id'}, inplace=True)
 
+# Feature Group 3: user features
+user_features = ['user__order_count',
+                  'user__product_count',
+                  'user__days_since_prior_order_mean',
+                  'user__reordered_mean',
+                  'user__most_dow',
+                  'user__most_hod',
+                  ]
 
+# combined features
+df_user_features = (prior_details.groupby(['user_id'],as_index=False)
+                                           .agg(OrderedDict(
+                                                   [('order_id','nunique'), 
+                                                    ('product_id','count'), 
+                                                    ('days_since_prior_order','mean'), 
+                                                    ('reordered', 'mean'), 
+                                                    ('order_dow', (lambda x: x.mode()[0])), 
+                                                    ('order_hour_of_day', (lambda x: x.mode()[0])), 
+                                                    ])))
+df_user_features.columns = ['user_id'] + user_features
+
+model_all_data = model_all_data.merge(df_user_features, on = ['user_id'])
+model_all_data['label'].value_counts() # enough of reordered items
+
+model_all_data.head()
