@@ -522,3 +522,17 @@ predict_y_prob = pipeline.predict_proba(test_data_x_selected_features)[:,1]
 plot_confusion_matrix(pipeline, test_data_x_selected_features, test_data_y,
                       display_labels=["not reorder","reorder"],cmap=plt.cm.Blues)
 
+acc = accuracy_score(test_data_y, predict_y)
+f1 = f1_score(test_data_y, predict_y)
+pre = precision_score(test_data_y, predict_y)
+rec = recall_score(test_data_y, predict_y)
+auc = roc_auc_score(test_data_y, predict_y_prob)
+
+print("Model evaluation result on test data: ")
+print("F1 Score : {:.4%}".format(f1))
+print("ROC AUC : {:.4%}".format(auc))
+print("Accuracy : {:.4%}".format(acc))
+print("Precision : {:.4%}".format(pre))
+print("Recall : {:.4%}".format(rec))
+
+
