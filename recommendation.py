@@ -433,7 +433,40 @@ train_validation_data_x_select_features = train_validation_data_x[top_features['
 
 top_features
 
+### Neural Network Model
+# Feed forward neural network
+def create_model():
+    model = keras.Sequential([
+        ### layer input
+        keras.layers.Dense(30, input_dim=20, activation='relu'),
+        ###  layer 1
+        keras.layers.Dense(15, activation='relu'),
+        ###  layer 2
+        keras.layers.Dense(5, activation='relu'),
+        ### layer output
+        keras.layers.Dense(units=1, activation='sigmoid')
+    ])
+    model.compile(optimizer='adam', loss='binary_crossentropy')
+    return model
 
+# wrap the model using the function you created
+NN_model = KerasClassifier(build_fn=create_model, epochs=8, batch_size=8, verbose=0)
+
+# keras_model = create_model()
+# print(keras_model.summary())
+
+### Model Selection with Selected Top Features including Neural Network Model
+
+# Add our neural network model to our classifiers list.
+classifiers.append(NN_model)
+
+for classifier in classifiers:
+  pipeline = build_ml_pipeline(classifier)
+  %time scores = cross_val_score(pipeline, train_validation_data_x_select_features, train_validation_data_y, cv=5, scoring='f1')
+  print(classifier.__class__.__name__, ': F1 value is %.3f (%.3f)' % (np.mean(scores)*100, np.std(scores)*100))
+  print('==============')
+
+  # NN_model does not have a clear advantage over the simpler models
 
 
 
