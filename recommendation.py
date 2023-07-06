@@ -316,3 +316,62 @@ from keras.wrappers.scikit_learn import KerasClassifier
 
 model_all_data = pd.read_csv('model_all_data.csv')
 model_all_data.head()
+
+unique_key = ['user_id', 'product_id']
+raw_features = ['order_number',
+                     'order_dow',
+                     'order_hour_of_day',
+                     'days_since_prior_order',
+                     'user_product__total_orders',
+                     'user_product__add_to_cart_order_mean',
+                     'user_product__reordered_mean',
+                     'product__total_orders',
+                     'product__add_to_cart_order_mean',
+                     'product__total_users',
+                     'product__reordered_mean',
+                     'product__days_since_prior_order_mean',
+                     'user__order_count',
+                     'user__product_count',
+                     'user__days_since_prior_order_mean',
+                     'user__reordered_mean',
+                     'product__aisle_id',
+                     'product__department_id',
+                     ]
+
+# additional features that are computationally intensive:
+                    #  'user_product__most_dow',
+                    #  'user_product__most_hod',
+                    #  'product__most_dow',
+                    #  'product__most_hod',
+                    #  'user__most_dow',
+                    #  'user__most_hod',
+
+label = ['label']
+
+# dataset used to build the model
+model_all_data = model_all_data[unique_key + raw_features + label]
+model_all_data.head()
+
+# 6. Feature Data Analysis & Tranformation
+
+### Label Ratio
+label_count = model_all_data.label.value_counts()
+print("Negative label count: ", label_count[0])
+print("Positive label count: ", label_count[1])
+print("Positive label rate: {:.2f}%".format(
+      label_count[1] / (label_count[0] + label_count[1]) * 100) )
+
+# ax = label_count.sort_values().plot(kind='barh', title='Labels Count')
+# ax.grid(axis="x")
+
+### Null values
+model_all_data.isna().sum()
+
+### Categorical Feature Transformation
+# One-hot encoding for the `product__department_id` feature.
+model_all_data = pd.concat(
+    [model_all_data.drop('product__department_id',axis=1),
+     pd.get_dummies(model_all_data["product__department_id"],
+                    prefix='product__department_id_')],
+                     axis=1)
+
