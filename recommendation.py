@@ -468,5 +468,23 @@ for classifier in classifiers:
 
   # NN_model does not have a clear advantage over the simpler models
 
+# 8. Hyper-parameter tuning
 
+# fine tuning hyperparameters for the AdaBoostClassifier model
+sample_user_ids = train_validation_data.user_id.drop_duplicates().sample(frac=0.05)
+train_validation_data_sample = train_validation_data[train_validation_data.user_id.isin(sample_user_ids)]
+
+train_validation_data_sample_x = train_validation_data_sample.drop(['user_id', 'product_id', 'label'],axis=1)[top_features['feature']]
+train_validation_data_sample_y = train_validation_data_sample['label']
+
+param_grid = {
+    'model__n_estimators': [100,150,200],
+    'model__learning_rate': [0.1, 0.2, 0.3],
+}
+
+grid = GridSearchCV(build_ml_pipeline(AdaBoostClassifier()), cv=5, param_grid=param_grid, scoring='f1')
+grid.fit(train_validation_data_sample_x, train_validation_data_sample_y)
+
+print("Best F1 value is %.3f" % grid.best_score_)
+print("Params are %s" % grid.best_params_)
 
