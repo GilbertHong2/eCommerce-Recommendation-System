@@ -428,7 +428,7 @@ df_importances = pd.DataFrame(
     {"feature":feature_names, "importance":importances}).sort_values("importance", ascending=False)
 top_features = df_importances.head(20)
 
-# Only use the selected top 15 features in our training data.
+# Only use the selected top features in our training data.
 train_validation_data_x_select_features = train_validation_data_x[top_features['feature']]
 
 top_features
@@ -471,6 +471,7 @@ for classifier in classifiers:
 # 8. Hyper-parameter tuning
 
 # fine tuning hyperparameters for the AdaBoostClassifier model
+### use a sample of the dataset to fine tune the hyperparameters for faster results
 sample_user_ids = train_validation_data.user_id.drop_duplicates().sample(frac=0.05)
 train_validation_data_sample = train_validation_data[train_validation_data.user_id.isin(sample_user_ids)]
 
