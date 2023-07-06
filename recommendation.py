@@ -284,6 +284,35 @@ model_all_data.head()
 # Save the model_all_data dataframe as csv file to the file path we selected above.
 model_all_data.to_csv('model_all_data.csv', index=False)
 
+# Load Libraries and Data for modeling
+import warnings
+warnings.filterwarnings("ignore")
 
+# pip install scikit-learn==1.0.2
 
+from imblearn.pipeline import Pipeline
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import RandomOverSampler
+from sklearn.impute import SimpleImputer
+from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import GridSearchCV
 
+from sklearn.metrics import plot_confusion_matrix
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
+from sklearn.metrics import f1_score
+from sklearn.metrics import roc_auc_score
+
+import keras
+from keras.utils.vis_utils import plot_model
+from keras.wrappers.scikit_learn import KerasClassifier
+
+model_all_data = pd.read_csv('model_all_data.csv')
+model_all_data.head()
