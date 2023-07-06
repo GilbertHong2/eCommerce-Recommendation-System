@@ -505,4 +505,20 @@ df_importances = pd.DataFrame(
     {"feature":feature_names, "importance":importances}).sort_values("importance", ascending=False)
 df_importances.head(20)
 
+# 10. Model Evaluation
+
+### Predict product reorder on Test Data
+
+test_data_x_selected_features = test_data.drop(['user_id', 'product_id', 'label'],axis=1)[top_features['feature']]
+test_data_y = test_data['label']  
+
+df_output = pd.DataFrame(
+    {"user_id":test_data.user_id, "product_id":test_data.product_id, "predict":predict_y, "label":test_data.label})
+
+df_output.head()
+
+predict_y_prob = pipeline.predict_proba(test_data_x_selected_features)[:,1]
+
+plot_confusion_matrix(pipeline, test_data_x_selected_features, test_data_y,
+                      display_labels=["not reorder","reorder"],cmap=plt.cm.Blues)
 
