@@ -416,5 +416,11 @@ for classifier in classifiers:
 
 # AdaBoostClassifier() will be used here as it has a relatively high F1 score and a much faster computation time
 
+### Feature Selection
+# redo the computation
+pipeline = build_ml_pipeline(AdaBoostClassifier())
+pipeline.fit(train_validation_data_x, train_validation_data_y)
+
+
 
 
