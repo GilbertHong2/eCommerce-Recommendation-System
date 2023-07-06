@@ -488,3 +488,21 @@ grid.fit(train_validation_data_sample_x, train_validation_data_sample_y)
 print("Best F1 value is %.3f" % grid.best_score_)
 print("Params are %s" % grid.best_params_)
 
+# 9. Train the Final Model
+
+### Train with all training+validation data and the best hyper-parameters.
+
+pipeline = build_ml_pipeline(AdaBoostClassifier(
+    n_estimators=150,
+    learning_rate=0.2,
+))
+
+pipeline.fit(train_validation_data_x_select_features, train_validation_data_y)
+
+importances = pipeline.steps[3][1].feature_importances_
+feature_names=train_validation_data_x_select_features.columns.tolist()
+df_importances = pd.DataFrame(
+    {"feature":feature_names, "importance":importances}).sort_values("importance", ascending=False)
+df_importances.head(20)
+
+
