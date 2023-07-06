@@ -375,3 +375,12 @@ model_all_data = pd.concat(
                     prefix='product__department_id_')],
                      axis=1)
 
+### Train, Validation and Test split
+# 25% here for testing data, and the remaining for train & validation data.
+test_user_ids = model_all_data.user_id.drop_duplicates().sample(frac=0.25)
+
+train_validation_data = model_all_data[~model_all_data.user_id.isin(test_user_ids)]
+test_data = model_all_data[model_all_data.user_id.isin(test_user_ids)]
+
+# 7. Model Selection
+### Model selection using all Features
