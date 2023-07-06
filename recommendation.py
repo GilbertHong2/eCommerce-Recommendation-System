@@ -384,3 +384,37 @@ test_data = model_all_data[model_all_data.user_id.isin(test_user_ids)]
 
 # 7. Model Selection
 ### Model selection using all Features
+
+train_validation_data_x = train_validation_data.drop(['user_id', 'product_id', 'label'],axis=1)
+train_validation_data_y = train_validation_data['label']
+
+classifiers = [
+    LogisticRegression(),
+    DecisionTreeClassifier(),
+    RandomForestClassifier(),
+    AdaBoostClassifier(),
+    GradientBoostingClassifier(),
+    ]
+
+def build_ml_pipeline(classifier):
+  steps = list()
+  steps.append(('fillnan', SimpleImputer(missing_values=np.nan, strategy='constant', fill_value=0.0)))
+  steps.append(('downSample', RandomUnderSampler()))
+  steps.append(('scaler', MinMaxScaler()))
+  steps.append(('model', classifier))
+  pipeline = Pipeline(steps=steps)
+  return pipeline
+
+# model selection
+# F1 score for performance, Latency for complexity, explanability, depend on the situation
+
+for classifier in classifiers:
+  pipeline = build_ml_pipeline(classifier)
+  %time scores = cross_val_score(pipeline, train_validation_data_x, train_validation_data_y, cv=5, scoring='f1')
+  print(classifier.__class__.__name__, ': F1 value is %.3f (%.3f)' % (np.mean(scores)*100, np.std(scores)*100))
+  print('==============')
+
+# AdaBoostClassifier() will be used here as it has a relatively high F1 score and a much faster computation time
+
+
+
