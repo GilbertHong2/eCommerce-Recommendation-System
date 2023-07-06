@@ -421,6 +421,19 @@ for classifier in classifiers:
 pipeline = build_ml_pipeline(AdaBoostClassifier())
 pipeline.fit(train_validation_data_x, train_validation_data_y)
 
+importances = pipeline.steps[3][1].feature_importances_
+feature_names=train_validation_data_x.columns.tolist()
+
+df_importances = pd.DataFrame(
+    {"feature":feature_names, "importance":importances}).sort_values("importance", ascending=False)
+top_features = df_importances.head(20)
+
+# Only use the selected top 15 features in our training data.
+train_validation_data_x_select_features = train_validation_data_x[top_features['feature']]
+
+top_features
+
+
 
 
 
